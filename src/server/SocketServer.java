@@ -66,6 +66,8 @@ public class SocketServer {
     }
 
     public static void main(String[] args) {
+        //this needs to change based on your computers network IP like TU secure
+        //it can be found in the network settings -> Wifi -> tu secure properties
         String ipAddress = "10.128.164.58"; // Specify the desired IP address here
         int port = 6000; // Specify the desired port here
         javax.swing.SwingUtilities.invokeLater(() -> new ServerGUI(ipAddress, port));
