@@ -12,11 +12,18 @@ public class ServerGUI extends JFrame implements ActionListener {
     private JTextArea logArea;
     private SocketServer server;
 
-    public ServerGUI() {
+    public ServerGUI(String ipAddress, int port) {
         super("Chat Server Control");
         setSize(500, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
+
+        server = new SocketServer(20); // Initialize the server instance
+        try {
+            server.initServer(port); // Initialize the server with the specified port
+        } catch (IOException e) {
+            logArea.append("Error initializing server: " + e.getMessage() + "\n");
+        }
 
         JPanel controlPanel = new JPanel();
         startButton = new JButton("Start Server");
@@ -35,16 +42,14 @@ public class ServerGUI extends JFrame implements ActionListener {
         setVisible(true);
     }
 
+
+
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == startButton) {
             new Thread(() -> {
                 try {
-                    if (server == null) {
-                        server = new SocketServer(20);
-                        server.initServer(6000);
-                    }
                     server.listen();
-                    logArea.append("Server started on port 6000...\n");
+                    logArea.append("Server started on port " + server.getServerSocket().getLocalPort() + "...\n");
                 } catch (IOException ex) {
                     logArea.append("Error starting server: " + ex.getMessage() + "\n");
                 }
@@ -52,10 +57,8 @@ public class ServerGUI extends JFrame implements ActionListener {
         } else if (e.getSource() == stopButton) {
             new Thread(() -> {
                 try {
-                    if (server != null) {
-                        server.killServer();
-                        logArea.append("Server stopped.\n");
-                    }
+                    server.killServer();
+                    logArea.append("Server stopped.\n");
                 } catch (IOException ex) {
                     logArea.append("Error stopping server: " + ex.getMessage() + "\n");
                 }
@@ -64,7 +67,8 @@ public class ServerGUI extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
-        new ServerGUI();
+        String ipAddress = "10.128.164.58"; // Specify the desired IP address here
+        int port = 6000; // Specify the desired port here
+        javax.swing.SwingUtilities.invokeLater(() -> new ServerGUI(ipAddress, port));
     }
 }
-

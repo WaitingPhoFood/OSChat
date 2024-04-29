@@ -1,7 +1,6 @@
 package server;
 
 import room.Room;
-import server.SocketServerThread;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -61,8 +60,16 @@ public class SocketServer {
         serverSocket.close();
     }
 
+    // Getter method for serverSocket
+    public ServerSocket getServerSocket() {
+        return serverSocket;
+    }
+
     public static void main(String[] args) {
-        javax.swing.SwingUtilities.invokeLater(ServerGUI::new);
+        String ipAddress = "10.128.164.58"; // Specify the desired IP address here
+        int port = 6000; // Specify the desired port here
+        javax.swing.SwingUtilities.invokeLater(() -> new ServerGUI(ipAddress, port));
     }
 }
+
 
