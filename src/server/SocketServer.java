@@ -3,6 +3,7 @@ package server;
 import room.Room;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -21,13 +22,14 @@ public class SocketServer {
         this.maxThreads = maxThreads;
     }
 
-    public void initServer(int port) throws IOException {
-        serverSocket = new ServerSocket(port);
-        System.out.println("Server initialized on port " + port + " but not listening yet.");
+    public void initServer(String ipAddress, int port) throws IOException {
+        InetAddress inetAddress = InetAddress.getByName(ipAddress);
+        serverSocket = new ServerSocket(port, 0, inetAddress);
+        System.out.println("Server initialized on IP " + ipAddress + " and port " + port + " but not listening yet.");
     }
 
     public void listen() throws IOException {
-        System.out.println("Server is now listening on port " + serverSocket.getLocalPort() + "\n");
+        System.out.println("Server is now listening on IP " + serverSocket.getInetAddress().getHostAddress() + " and port " + serverSocket.getLocalPort() + "\n");
         listenToClients();
     }
 
@@ -66,12 +68,16 @@ public class SocketServer {
     }
 
     public static void main(String[] args) {
-        //this needs to change based on your computers network IP like TU secure
-        //it can be found in the network settings -> Wifi -> tu secure properties
-        String ipAddress = "10.128.164.58"; // Specify the desired IP address here
-        int port = 6000; // Specify the desired port here
-        javax.swing.SwingUtilities.invokeLater(() -> new ServerGUI(ipAddress, port));
+        String ipAddress = "10.128.136.222"; // Hardcoded IP address
+        int port = 6000; // Hardcoded port number
+        int maxThreads = 20; // Specify the maximum number of threads here
+
+        SocketServer server = new SocketServer(maxThreads);
+        try {
+            server.initServer(ipAddress, port);
+            server.listen();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
-
-
