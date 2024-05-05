@@ -1,6 +1,7 @@
 package client;
 
 import javax.swing.*;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,24 +9,56 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import message.ChatMessage;
 
 public class ClientGUI extends JFrame implements ActionListener {
-    private JTextArea chatArea;
+    private JTextPane chatArea;
     private JTextField messageField;
     private JButton sendButton, connectButton;
     private JTextField serverAddressField, serverPortField;
     private Socket socket;
     private ObjectInputStream input;
     private ObjectOutputStream output;
+    private String username;
+    private ImageIcon profilePicture;
+    private StyledDocument doc;
 
-    public ClientGUI() {
+    public ClientGUI(String username, ImageIcon profilePicture) {
         setTitle("Chat Client");
-        setSize(600, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(720, 720);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
+        this.username = username;
+        this.profilePicture = profilePicture;
 
-        chatArea = new JTextArea();
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                try {
+                    if (output != null) {
+                        output.close();
+                    }
+                    if (input != null) {
+                        input.close();
+                    }
+                    if (socket != null) {
+                        socket.close();
+                    }
+                } catch (IOException ex) {
+                    try {
+                        doc.insertString(doc.getLength(), "Error disconnecting from server: " + ex.getMessage() + "\n", null);
+                    } catch (BadLocationException ble) {
+                        ble.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        chatArea = new JTextPane();
         chatArea.setEditable(false);
+        doc = chatArea.getStyledDocument();
         add(new JScrollPane(chatArea), BorderLayout.CENTER);
 
         JPanel panel = new JPanel();
@@ -55,7 +88,11 @@ public class ClientGUI extends JFrame implements ActionListener {
             input = new ObjectInputStream(socket.getInputStream());
             new Thread(this::listen).start();
         } catch (IOException e) {
-            chatArea.append("Could not connect to server: " + e.getMessage() + "\n");
+            try {
+                doc.insertString(doc.getLength(), "Could not connect to server: " + e.getMessage() + "\n", null);
+            } catch (BadLocationException ble) {
+                ble.printStackTrace();
+            }
         }
     }
 
@@ -63,30 +100,52 @@ public class ClientGUI extends JFrame implements ActionListener {
         try {
             while (true) {
                 Object message = input.readObject();
-                if (message instanceof String) {
-                    SwingUtilities.invokeLater(() -> chatArea.append(message + "\n"));
+                if (message instanceof ChatMessage) {
+                    ChatMessage chatMessage = (ChatMessage) message;
+                    String text = chatMessage.getSenderName() + ": " + chatMessage.getMessage() + "\n";
+                    SwingUtilities.invokeLater(() -> {
+                        try {
+                            doc.insertString(doc.getLength(), text, null);
+                        } catch (BadLocationException e) {
+                            e.printStackTrace();
+                        }
+                    });
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
-            chatArea.append("Lost connection to server.\n");
+            try {
+                doc.insertString(doc.getLength(), "Error or connection closed: " + e.getMessage() + "\n", null);
+            } catch (BadLocationException ble) {
+                ble.printStackTrace();
+            }
         }
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == connectButton) {
             connectToServer();
         } else if (e.getSource() == sendButton) {
             try {
-                output.writeObject(messageField.getText());
+                String messageText = messageField.getText();
+                output.writeObject(messageText);
                 output.flush();
                 messageField.setText("");
             } catch (IOException ex) {
-                chatArea.append("Error sending message: " + ex.getMessage() + "\n");
+                try {
+                    doc.insertString(doc.getLength(), "Error sending message: " + ex.getMessage() + "\n", null);
+                } catch (BadLocationException ble) {
+                    ble.printStackTrace();
+                }
             }
         }
     }
 
+    public static void startWithoutUser() {
+        SwingUtilities.invokeLater(() -> new ClientGUI(null, null));
+    }
+
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(ClientGUI::new);
+        ClientGUI.startWithoutUser();
     }
 }

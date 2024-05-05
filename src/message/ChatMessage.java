@@ -1,5 +1,6 @@
 package message;
 
+import javax.swing.*;
 import java.io.Serializable;
 
 public class ChatMessage implements Serializable {
@@ -8,25 +9,27 @@ public class ChatMessage implements Serializable {
     private String message;
     private byte[] file;
     private ChatMessageType type;
+    private ImageIcon userImage;
 
-    private ChatMessage(String senderName, String roomName, ChatMessageType type) {
+    private ChatMessage(String senderName, String roomName, ChatMessageType type, ImageIcon userImage) {
         this.senderName = senderName;
         this.roomName = roomName;
         this.type = type;
+        this.userImage = userImage;
     }
 
-    public ChatMessage(String senderName, String roomName, ChatMessageType type, String message) {
-        this(senderName, roomName, type);
+    public ChatMessage(String senderName, String roomName, ChatMessageType type, String message, ImageIcon userImage) {
+        this(senderName, roomName, type, userImage);
         this.message = message;
     }
 
-    public ChatMessage(String senderName, String roomName, ChatMessageType type, byte[] file) {
-        this(senderName, roomName, type);
+    public ChatMessage(String senderName, String roomName, ChatMessageType type, byte[] file, ImageIcon userImage) {
+        this(senderName, roomName, type, userImage);
         this.file = file;
     }
 
-    public ChatMessage(String senderName, String roomName, ChatMessageType type, String message, byte[] file) {
-        this(senderName, roomName, type);
+    public ChatMessage(String senderName, String roomName, ChatMessageType type, String message, byte[] file, ImageIcon userImage) {
+        this(senderName, roomName, type, userImage);
         this.message = message;
         this.file = file;
     }
@@ -49,5 +52,9 @@ public class ChatMessage implements Serializable {
 
     public byte[] getFile() {
         return file;
+    }
+
+    public ImageIcon getUserImage() {
+        return userImage;
     }
 }

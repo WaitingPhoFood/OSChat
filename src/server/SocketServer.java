@@ -57,18 +57,20 @@ public class SocketServer {
     }
 
     public void killServer() throws IOException {
-        alive = false;
-        new Socket(serverSocket.getInetAddress(), serverSocket.getLocalPort()).close();
-        serverSocket.close();
+        if (serverSocket != null && !serverSocket.isClosed()) { // Check if serverSocket is not null and not closed before invoking getInetAddress
+            InetAddress serverIP = serverSocket.getInetAddress();
+            alive = false;
+            new Socket(serverSocket.getInetAddress(), serverSocket.getLocalPort()).close();
+            serverSocket.close();
+        }
     }
-
     // Getter method for serverSocket
     public ServerSocket getServerSocket() {
         return serverSocket;
     }
 
     public static void main(String[] args) {
-        String ipAddress = "10.128.136.222"; // Hardcoded IP address
+        String ipAddress = "127.0.0.1"; // Hardcoded IP address
         int port = 6000; // Hardcoded port number
         int maxThreads = 20; // Specify the maximum number of threads here
 

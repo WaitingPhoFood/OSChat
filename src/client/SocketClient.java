@@ -20,6 +20,7 @@ public class SocketClient {
     private ObjectOutputStream clientOutput;
     private ClientListener listener;
 
+
     public interface ClientListener {
         void onMessageReceived(String message);
         void onConnectionFailed(String error);
@@ -32,7 +33,7 @@ public class SocketClient {
     }
 
     public static void main(String[] args) {
-        javax.swing.SwingUtilities.invokeLater(ClientGUI::new);
+        ClientGUI.startWithoutUser();
     }
 
     public void connectToServer(String serverAddress, int serverPort) throws IOException {
