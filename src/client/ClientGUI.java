@@ -110,14 +110,24 @@ public class ClientGUI extends JFrame implements ActionListener {
                             e.printStackTrace();
                         }
                     });
+                } else if (message instanceof String) {
+                    SwingUtilities.invokeLater(() -> {
+                        try {
+                            doc.insertString(doc.getLength(), (String) message + "\n", null);
+                        } catch (BadLocationException e) {
+                            e.printStackTrace();
+                        }
+                    });
                 }
             }
-        } catch (IOException | ClassNotFoundException e) {
-            try {
-                doc.insertString(doc.getLength(), "Error or connection closed: " + e.getMessage() + "\n", null);
-            } catch (BadLocationException ble) {
-                ble.printStackTrace();
-            }
+        } catch(IOException | ClassNotFoundException e){
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    doc.insertString(doc.getLength(), "Error or connection closed: " + e.getMessage() + "\n", null);
+                } catch (BadLocationException ble) {
+                    ble.printStackTrace();
+                }
+            });
         }
     }
 
@@ -128,9 +138,17 @@ public class ClientGUI extends JFrame implements ActionListener {
         } else if (e.getSource() == sendButton) {
             try {
                 String messageText = messageField.getText();
+                // Send the username and message text as separate strings
+                output.writeObject(username);
                 output.writeObject(messageText);
                 output.flush();
                 messageField.setText("");
+                // Display the client's message in their own chat area
+                try {
+                    doc.insertString(doc.getLength(), username + ": " + messageText + "\n", null);
+                } catch (BadLocationException ble) {
+                    ble.printStackTrace();
+                }
             } catch (IOException ex) {
                 try {
                     doc.insertString(doc.getLength(), "Error sending message: " + ex.getMessage() + "\n", null);

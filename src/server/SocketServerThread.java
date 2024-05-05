@@ -28,8 +28,9 @@ public class SocketServerThread implements Runnable {
     public void run() {
         try {
             while (true) {
+                String username = (String) input.readObject();
                 String message = (String) input.readObject();
-                broadcast(message);
+                broadcast(username + ": " + message);
             }
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("Error or connection closed: " + e.getMessage());
@@ -67,5 +68,3 @@ public class SocketServerThread implements Runnable {
     public void killThread() {
     }
 }
-
-

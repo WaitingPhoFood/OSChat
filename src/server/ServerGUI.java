@@ -19,15 +19,15 @@ public class ServerGUI extends JFrame implements ActionListener {
     private JTextField portField; // New field for port input
     private SocketServer server;
     private String username;
-    private ImageIcon profilePicture;
+    private ImageIcon userImage;
 
-    public ServerGUI(String username, ImageIcon profilePicture) {
+    public ServerGUI(String username, ImageIcon userImage) {
         super("Chat Server Control");
         setSize(800, 800);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
         this.username = username;
-        this.profilePicture = profilePicture;
+        this.userImage = userImage;
 
         server = new SocketServer(20); // Initialize the server instance
 
@@ -58,6 +58,7 @@ public class ServerGUI extends JFrame implements ActionListener {
             }
         });
 
+
         JPanel controlPanel = new JPanel();
         startButton = new JButton("Start Server");
         stopButton = new JButton("Stop Server");
@@ -65,10 +66,19 @@ public class ServerGUI extends JFrame implements ActionListener {
         portField = new JTextField(5); // New field for port input, 5 columns wide
         startButton.addActionListener(this);
         stopButton.addActionListener(this);
+
+        // Create a new button for setting localhost defaults
+        JButton localhostButton = new JButton("Localhost");
+        localhostButton.addActionListener(e -> {
+            ipAddressField.setText("127.0.0.1");
+            portField.setText("6000");
+        });
+
         controlPanel.add(new JLabel("IP Address:"));
         controlPanel.add(ipAddressField);
         controlPanel.add(new JLabel("Port:")); // New label for port input
         controlPanel.add(portField); // Add the new field to the panel
+        controlPanel.add(localhostButton);
         controlPanel.add(startButton);
         controlPanel.add(stopButton);
 
