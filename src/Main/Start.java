@@ -32,14 +32,25 @@ public class Start extends JFrame implements ActionListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
+        // Set the background color to the specified hex color
+        getContentPane().setBackground(Color.decode("#ebc1c1"));
+        Color backgroundColor = Color.decode("#ebc1c1");
+        getContentPane().setBackground(backgroundColor);
+
         titleLabel = new JLabel("Welcome to SocketChat!", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        titleLabel.setOpaque(true); // Needed for JLabels
+        titleLabel.setBackground(backgroundColor);
 
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        centerPanel.setBackground(backgroundColor); // Set the background color of the centerPanel
 
         JPanel topPanel = new JPanel(new FlowLayout());
+        topPanel.setBackground(backgroundColor); // Set the background color of the topPanel
+
         JPanel bottomPanel = new JPanel(new FlowLayout());
+        bottomPanel.setBackground(backgroundColor); // Set the background color of the bottomPanel
 
         usernameField = new JTextField(20);
         uploadButton = new JButton("Upload Profile Picture");

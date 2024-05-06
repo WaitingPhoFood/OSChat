@@ -11,7 +11,10 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+
 import message.ChatMessage;
+import message.ChatMessageType;
 
 public class ClientGUI extends JFrame implements ActionListener {
     private JTextPane chatArea;
@@ -24,6 +27,10 @@ public class ClientGUI extends JFrame implements ActionListener {
     private String username;
     private ImageIcon profilePicture;
     private StyledDocument doc;
+    private JLabel profilePictureLabel;
+    private JPanel profilePanel;
+    private ArrayList<JLabel> profilePictureLabels = new ArrayList<>();
+    private ArrayList<String> addedUsernames = new ArrayList<>();
 
     public ClientGUI(String username, ImageIcon profilePicture) {
         setTitle("Chat Client");
@@ -55,6 +62,20 @@ public class ClientGUI extends JFrame implements ActionListener {
                 }
             }
         });
+
+        // Profile Picture Panel ---------------------
+        // Create a panel for the user's profile
+        profilePanel = new JPanel();
+        profilePanel.setLayout(new BoxLayout(profilePanel, BoxLayout.Y_AXIS));
+
+        // Add the current user's profile to the panel
+        addUserProfile(username, profilePicture);
+
+        // Add the profile panel to the frame
+        add(profilePanel, BorderLayout.WEST);
+
+
+        //---------------------------------------------
 
         chatArea = new JTextPane();
         chatArea.setEditable(false);
@@ -102,14 +123,24 @@ public class ClientGUI extends JFrame implements ActionListener {
                 Object message = input.readObject();
                 if (message instanceof ChatMessage) {
                     ChatMessage chatMessage = (ChatMessage) message;
-                    String text = chatMessage.getSenderName() + ": " + chatMessage.getMessage() + "\n";
-                    SwingUtilities.invokeLater(() -> {
-                        try {
-                            doc.insertString(doc.getLength(), text, null);
-                        } catch (BadLocationException e) {
-                            e.printStackTrace();
-                        }
-                    });
+                    if (chatMessage.getType() == ChatMessageType.NEW_USER) {
+                        // A new user has joined, so add their profile to the panel
+                        SwingUtilities.invokeLater(() -> {
+                            if (!addedUsernames.contains(chatMessage.getSenderName())) {
+                                addUserProfile(chatMessage.getSenderName(), chatMessage.getUserImage());
+                                addedUsernames.add(chatMessage.getSenderName());
+                            }
+                        });
+                    } else {
+                        String text = chatMessage.getSenderName() + ": " + chatMessage.getMessage() + "\n";
+                        SwingUtilities.invokeLater(() -> {
+                            try {
+                                doc.insertString(doc.getLength(), text, null);
+                            } catch (BadLocationException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    }
                 } else if (message instanceof String) {
                     SwingUtilities.invokeLater(() -> {
                         try {
@@ -135,11 +166,21 @@ public class ClientGUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == connectButton) {
             connectToServer();
+            try {
+                // Send the username and profile picture as a ChatMessage when the user first connects
+                output.writeObject(new ChatMessage(username, ChatMessageType.NEW_USER, profilePicture));
+                output.flush();
+            } catch (IOException ex) {
+                try {
+                    doc.insertString(doc.getLength(), "Error sending message: " + ex.getMessage() + "\n", null);
+                } catch (BadLocationException ble) {
+                    ble.printStackTrace();
+                }
+            }
         } else if (e.getSource() == sendButton) {
             try {
                 String messageText = messageField.getText();
-                // Send the username and message text as separate strings
-                output.writeObject(username);
+                // Send only the message text as a String
                 output.writeObject(messageText);
                 output.flush();
                 messageField.setText("");
@@ -158,6 +199,30 @@ public class ClientGUI extends JFrame implements ActionListener {
             }
         }
     }
+
+    // Method to add a user's profile to the panel
+    private void addUserProfile(String username, ImageIcon profilePicture){
+        // Create a label for the user's profile picture
+        JLabel profilePictureLabel = new JLabel();
+        profilePictureLabel.setIcon(profilePicture);
+        profilePictureLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Create a label for the user's username
+        JLabel usernameLabel = new JLabel(username);
+        usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Add the labels to the profile panel
+        profilePanel.add(profilePictureLabel);
+        profilePanel.add(usernameLabel);
+
+        // Add the profile picture label to the list
+        profilePictureLabels.add(profilePictureLabel);
+
+        // Repaint the profile panel to reflect the changes
+        profilePanel.revalidate();
+        profilePanel.repaint();
+    }
+
 
     public static void startWithoutUser() {
         SwingUtilities.invokeLater(() -> new ClientGUI(null, null));

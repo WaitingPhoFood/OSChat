@@ -10,11 +10,13 @@ public class ChatMessage implements Serializable {
     private byte[] file;
     private ChatMessageType type;
     private ImageIcon userImage;
+    private Object data;
 
-    private ChatMessage(String senderName, String roomName, ChatMessageType type, ImageIcon userImage) {
+    public ChatMessage(String senderName, String roomName, ChatMessageType type, ImageIcon userImage) {
         this.senderName = senderName;
         this.roomName = roomName;
         this.type = type;
+        this.data = data;
         this.userImage = userImage;
     }
 
@@ -32,6 +34,12 @@ public class ChatMessage implements Serializable {
         this(senderName, roomName, type, userImage);
         this.message = message;
         this.file = file;
+    }
+
+    public ChatMessage(String senderName, ChatMessageType type, ImageIcon userImage) {
+        this.senderName = senderName;
+        this.type = type;
+        this.userImage = userImage;
     }
 
     public String getSenderName() {
