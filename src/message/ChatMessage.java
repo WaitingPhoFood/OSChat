@@ -12,6 +12,9 @@ public class ChatMessage implements Serializable {
     private ImageIcon userImage;
     private Object data;
 
+    private String fileName;
+
+
     public ChatMessage(String senderName, String roomName, ChatMessageType type, ImageIcon userImage) {
         this.senderName = senderName;
         this.roomName = roomName;
@@ -20,26 +23,34 @@ public class ChatMessage implements Serializable {
         this.userImage = userImage;
     }
 
-    public ChatMessage(String senderName, String roomName, ChatMessageType type, String message, ImageIcon userImage) {
-        this(senderName, roomName, type, userImage);
-        this.message = message;
-    }
-
-    public ChatMessage(String senderName, String roomName, ChatMessageType type, byte[] file, ImageIcon userImage) {
-        this(senderName, roomName, type, userImage);
-        this.file = file;
-    }
-
-    public ChatMessage(String senderName, String roomName, ChatMessageType type, String message, byte[] file, ImageIcon userImage) {
-        this(senderName, roomName, type, userImage);
-        this.message = message;
-        this.file = file;
-    }
+//    public ChatMessage(String senderName, String roomName, ChatMessageType type, String message, ImageIcon userImage) {
+//        this(senderName, roomName, type, userImage);
+//        this.message = message;
+//    }
+//
+//    public ChatMessage(String senderName, String roomName, ChatMessageType type, byte[] file, ImageIcon userImage) {
+//        this(senderName, roomName, type, userImage);
+//        this.file = file;
+//    }
+//
+//    public ChatMessage(String senderName, String roomName, ChatMessageType type, String message, byte[] file, ImageIcon userImage) {
+//        this(senderName, roomName, type, userImage);
+//        this.message = message;
+//        this.file = file;
+//    }
 
     public ChatMessage(String senderName, ChatMessageType type, ImageIcon userImage) {
         this.senderName = senderName;
         this.type = type;
         this.userImage = userImage;
+    }
+
+    public ChatMessage(String senderName, ChatMessageType type, byte[] file, String fileName) {
+        this.senderName = senderName;
+        this.type = type;
+        this.file = file;
+        this.fileName = fileName;
+
     }
 
     public String getSenderName() {
@@ -58,8 +69,12 @@ public class ChatMessage implements Serializable {
         return message;
     }
 
-    public byte[] getFile() {
+    public byte[] getFileData() {
         return file;
+    }
+
+    public String getFileName(){
+        return fileName;
     }
 
     public ImageIcon getUserImage() {

@@ -9,7 +9,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+
+import static message.ChatMessageType.FILE;
 
 public class SocketServerThread implements Runnable {
     private Socket socket;
@@ -47,11 +52,26 @@ public class SocketServerThread implements Runnable {
                 if (obj instanceof ChatMessage) {
                     ChatMessage chatMessage = (ChatMessage) obj;
 
-                    if (chatMessage.getType() == ChatMessageType.NEW_USER && isNewUser) {
-                        username = chatMessage.getSenderName();
-                        profilePicture = chatMessage.getUserImage();
-                        notifyNewUser();
-                        isNewUser = false;
+                    switch (chatMessage.getType()) {
+                        case NEW_USER:
+                            if (isNewUser) {
+                                username = chatMessage.getSenderName();
+                                profilePicture = chatMessage.getUserImage();
+                                notifyNewUser();
+                                isNewUser = false;
+                            }
+                            break;
+                        case FILE:
+                            // Handling file message
+                            String receivedFileName = chatMessage.getFileName();  // Ensure getFileName() exists
+                            byte[] fileData = chatMessage.getFileData();  // Ensure getFile() returns correct data
+                            System.out.println("Received file: " + receivedFileName);
+                            // Here you might save the file or update the GUI
+                            saveFile(receivedFileName, fileData);
+                            break;
+                        default:
+                            broadcast(chatMessage.getMessage());
+                            break;
                     }
                 } else if (obj instanceof String) {
                     String message = (String) obj;
@@ -64,6 +84,27 @@ public class SocketServerThread implements Runnable {
             closeConnection();
         }
     }
+
+    private void saveFile(String fileName, byte[] data) {
+        try {
+            Path directoryPath = Paths.get("C:\\Users\\adam.long");
+            if (!Files.exists(directoryPath)) {
+                Files.createDirectories(directoryPath);  // Create the directory if it doesn't exist
+                System.out.println("Created directory: " + directoryPath);
+            }
+
+            Path filePath = directoryPath.resolve(fileName);
+            Files.write(filePath, data);  // Write data to the file
+            System.out.println("File saved to: " + filePath);
+        } catch (IOException e) {
+            System.out.println("Could not save file: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
+
+
 
 
     //private void broadcast(String message) {

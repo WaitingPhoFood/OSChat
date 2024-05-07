@@ -5,12 +5,14 @@ import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.nio.file.Files;
 import java.util.ArrayList;
 
 import message.ChatMessage;
@@ -31,6 +33,9 @@ public class ClientGUI extends JFrame implements ActionListener {
     private JPanel profilePanel;
     private ArrayList<JLabel> profilePictureLabels = new ArrayList<>();
     private ArrayList<String> addedUsernames = new ArrayList<>();
+
+    private JButton sendFileButton;
+    private JFileChooser fileChooser;
 
     public ClientGUI(String username, ImageIcon profilePicture) {
         setTitle("Chat Client");
@@ -85,12 +90,15 @@ public class ClientGUI extends JFrame implements ActionListener {
         JPanel panel = new JPanel();
         messageField = new JTextField(30);
         sendButton = new JButton("Send");
+        sendFileButton = new JButton("Send File");
+        fileChooser = new JFileChooser();
         connectButton = new JButton("Connect");
         serverAddressField = new JTextField("localhost", 10);
         serverPortField = new JTextField("6000", 5);
 
         panel.add(messageField);
         panel.add(sendButton);
+        panel.add(sendFileButton);
         panel.add(serverAddressField);
         panel.add(serverPortField);
         panel.add(connectButton);
@@ -98,6 +106,8 @@ public class ClientGUI extends JFrame implements ActionListener {
 
         sendButton.addActionListener(this);
         connectButton.addActionListener(this);
+        sendFileButton.addActionListener(this);
+
 
         setVisible(true);
     }
@@ -195,6 +205,26 @@ public class ClientGUI extends JFrame implements ActionListener {
                     doc.insertString(doc.getLength(), "Error sending message: " + ex.getMessage() + "\n", null);
                 } catch (BadLocationException ble) {
                     ble.printStackTrace();
+                }
+            }
+        } else if (e.getSource() == sendFileButton) {
+            int returnVal = fileChooser.showOpenDialog(ClientGUI.this);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                try {
+                    // Read file as bytes
+                    byte[] content = Files.readAllBytes(file.toPath());
+                    System.out.println("File length: " + content.length);
+                    // Create a file message (assuming ChatMessage can handle file data)
+                    ChatMessage fileMessage = new ChatMessage(username, ChatMessageType.FILE, content, file.getName());
+                    output.writeObject(fileMessage);
+                    output.flush();
+                } catch (IOException ex) {
+                    try {
+                        doc.insertString(doc.getLength(), "Error sending file: " + ex.getMessage() + "\n", null);
+                    } catch (BadLocationException ble) {
+                        ble.printStackTrace();
+                    }
                 }
             }
         }
