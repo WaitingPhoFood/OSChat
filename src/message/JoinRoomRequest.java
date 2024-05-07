@@ -13,10 +13,6 @@ public class JoinRoomRequest implements Serializable {
         this.group = false;
     }
 
-    public JoinRoomRequest(String name, String roomName, boolean group) {
-        this(name, roomName);
-        this.group = group;
-    }
 
     public String getName() {
         return name;

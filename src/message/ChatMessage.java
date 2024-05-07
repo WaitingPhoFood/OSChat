@@ -25,21 +25,6 @@ public class ChatMessage implements Serializable {
         this.userImage = userImage;
     }
 
-//    public ChatMessage(String senderName, String roomName, ChatMessageType type, String message, ImageIcon userImage) {
-//        this(senderName, roomName, type, userImage);
-//        this.message = message;
-//    }
-//
-//    public ChatMessage(String senderName, String roomName, ChatMessageType type, byte[] file, ImageIcon userImage) {
-//        this(senderName, roomName, type, userImage);
-//        this.file = file;
-//    }
-//
-//    public ChatMessage(String senderName, String roomName, ChatMessageType type, String message, byte[] file, ImageIcon userImage) {
-//        this(senderName, roomName, type, userImage);
-//        this.message = message;
-//        this.file = file;
-//    }
 
     public ChatMessage(String senderName, ChatMessageType type, ImageIcon userImage) {
         this.senderName = senderName;
@@ -60,9 +45,6 @@ public class ChatMessage implements Serializable {
         return senderName;
     }
 
-    public String getRoomName() {
-        return roomName;
-    }
 
     public ChatMessageType getType() {
         return type;
@@ -80,9 +62,6 @@ public class ChatMessage implements Serializable {
         return fileName;
     }
 
-    public String getFileDirectory() {
-        return fileDirectory;
-    }
 
     public ImageIcon getUserImage() {
         return userImage;

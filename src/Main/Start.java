@@ -42,6 +42,10 @@ public class Start extends JFrame implements ActionListener {
         titleLabel.setOpaque(true); // Needed for JLabels
         titleLabel.setBackground(backgroundColor);
 
+
+
+
+
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setBackground(backgroundColor); // Set the background color of the centerPanel
@@ -81,10 +85,15 @@ public class Start extends JFrame implements ActionListener {
                 JLabel ipLabel = new JLabel("Your IP Address: " + ipAddress + " Recommended Port is 6000");
                 ipLabel.setFont(new Font("Arial", Font.PLAIN, 16));
                 topPanel.add(ipLabel);
+
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        JLabel warning = new JLabel("Warning: You must run your IDE in Admin mode and have a file directory: C:\\Users\\OSFileExchange");
+        warning.setFont(new Font("Arial", Font.BOLD, 20));
+        bottomPanel.add(warning);
 
         centerPanel.add(topPanel);
         centerPanel.add(bottomPanel);
@@ -101,6 +110,7 @@ public class Start extends JFrame implements ActionListener {
         centerPanel.add(Box.createVerticalGlue());
         centerPanel.add(Box.createVerticalGlue());
         centerPanel.add(Box.createVerticalGlue());
+
 
         add(titleLabel, BorderLayout.NORTH);
         add(centerPanel, BorderLayout.CENTER);

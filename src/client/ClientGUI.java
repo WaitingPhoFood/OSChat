@@ -214,7 +214,7 @@ public class ClientGUI extends JFrame implements ActionListener {
                 try {
                     // Read file as bytes
                     byte[] content = Files.readAllBytes(file.toPath());
-                    String fileDirectory = "C:\\Users\\adam.long";
+                    String fileDirectory = "C:\\Users\\OSFileExchange";
                     System.out.println("File length: " + content.length);
                     // Create a file message (assuming ChatMessage can handle file data)
                     ChatMessage fileMessage = new ChatMessage(username, ChatMessageType.FILE, content, file.getName(), fileDirectory);
@@ -222,7 +222,7 @@ public class ClientGUI extends JFrame implements ActionListener {
                     output.flush();
 
                     try {
-                        String messageText = "Sent a file to C:\\Users\\adam.long named: " + file.getName();
+                        String messageText = "Sent a file to C:\\Users\\OSFileExchange named: " + file.getName();
                         // Send only the message text as a String
                         output.writeObject(messageText);
                         output.flush();

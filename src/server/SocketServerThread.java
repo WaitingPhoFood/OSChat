@@ -68,7 +68,7 @@ public class SocketServerThread implements Runnable {
                         case FILE:
                             // Handling file message
                             String receivedFileName = chatMessage.getFileName();
-                            String receivedFileDirectory = "C:\\Users\\adam.long";
+                            String receivedFileDirectory = "C:\\Users\\OSFileExchange";
                             // Ensure getFileName() exists
                             byte[] fileData = chatMessage.getFileData();  // Ensure getFile() returns correct data
                             System.out.println("Received file: " + receivedFileName);
@@ -96,7 +96,7 @@ public class SocketServerThread implements Runnable {
 
     private void saveFile(String fileName, byte[] data) {
         try {
-            Path directoryPath = Paths.get("C:\\Users\\adam.long");
+            Path directoryPath = Paths.get("C:\\Users\\OSFileExchange");
             if (!Files.exists(directoryPath)) {
                 Files.createDirectories(directoryPath);  // Create the directory if it doesn't exist
                 System.out.println("Created directory: " + directoryPath);

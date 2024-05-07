@@ -36,19 +36,6 @@ public class SocketClient {
         ClientGUI.startWithoutUser();
     }
 
-    public void connectToServer(String serverAddress, int serverPort) throws IOException {
-        try {
-            socket = new Socket(serverAddress, serverPort);
-            clientOutput = new ObjectOutputStream(socket.getOutputStream());
-            clientInput = new ObjectInputStream(socket.getInputStream());
-            new Thread(this::initiate).start();
-        } catch (IOException e) {
-            if (listener != null) {
-                listener.onConnectionFailed("Could not connect to server: " + e.getMessage());
-            }
-            throw e;
-        }
-    }
 
     private void initiate() {
         try {
@@ -61,29 +48,6 @@ public class SocketClient {
         }
     }
 
-    public void disconnect() {
-        try {
-            if (socket != null) {
-                socket.close();
-            }
-            if (listener != null) {
-                listener.onDisconnected();
-            }
-        } catch (IOException e) {
-            if (listener != null) {
-                listener.onConnectionFailed("Error disconnecting: " + e.getMessage());
-            }
-        }
-    }
-
-    public void sendToServer(Object message) throws IOException {
-        clientOutput.writeObject(message);
-        clientOutput.flush();
-    }
-
-    public Object getServerReply() throws IOException, ClassNotFoundException {
-        return clientInput.readObject();
-    }
 
     public String getName() {
         return name;
