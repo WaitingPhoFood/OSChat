@@ -214,11 +214,22 @@ public class ClientGUI extends JFrame implements ActionListener {
                 try {
                     // Read file as bytes
                     byte[] content = Files.readAllBytes(file.toPath());
+                    String fileDirectory = "C:\\Users\\adam.long";
                     System.out.println("File length: " + content.length);
                     // Create a file message (assuming ChatMessage can handle file data)
-                    ChatMessage fileMessage = new ChatMessage(username, ChatMessageType.FILE, content, file.getName());
+                    ChatMessage fileMessage = new ChatMessage(username, ChatMessageType.FILE, content, file.getName(), fileDirectory);
                     output.writeObject(fileMessage);
                     output.flush();
+
+
+                    SwingUtilities.invokeLater(() -> {
+                        try {
+                            doc.insertString(doc.getLength(), "You sent a file: " + file.getName() + " located at: " + fileDirectory + "\n", null);
+                        } catch (BadLocationException ble) {
+                            ble.printStackTrace();
+                        }
+                    });
+
                 } catch (IOException ex) {
                     try {
                         doc.insertString(doc.getLength(), "Error sending file: " + ex.getMessage() + "\n", null);

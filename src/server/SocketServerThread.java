@@ -5,6 +5,8 @@ import message.ChatMessageType;
 import room.Room;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.StyledDocument;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -24,6 +26,8 @@ public class SocketServerThread implements Runnable {
     private String username;
     private ImageIcon profilePicture;
     private boolean hasJoinedMessageSent = false;
+
+    private StyledDocument doc;
 
     boolean isNewUser;
 
@@ -63,11 +67,24 @@ public class SocketServerThread implements Runnable {
                             break;
                         case FILE:
                             // Handling file message
-                            String receivedFileName = chatMessage.getFileName();  // Ensure getFileName() exists
+                            String receivedFileName = chatMessage.getFileName();
+                            String receivedFileDirectory = "C:\\Users\\adam.long";
+                            // Ensure getFileName() exists
                             byte[] fileData = chatMessage.getFileData();  // Ensure getFile() returns correct data
                             System.out.println("Received file: " + receivedFileName);
                             // Here you might save the file or update the GUI
+
                             saveFile(receivedFileName, fileData);
+
+                            // Update GUI to show file info
+                            SwingUtilities.invokeLater(() -> {
+                                try {
+                                    doc.insertString(doc.getLength(), chatMessage.getSenderName() + " sent a file: " + receivedFileName + " located at: " + receivedFileDirectory + "\n", null);
+                                } catch (BadLocationException e) {
+                                    e.printStackTrace();
+                                }
+                            });
+
                             break;
                         default:
                             broadcast(chatMessage.getMessage());
@@ -95,6 +112,7 @@ public class SocketServerThread implements Runnable {
 
             Path filePath = directoryPath.resolve(fileName);
             Files.write(filePath, data);  // Write data to the file
+
             System.out.println("File saved to: " + filePath);
         } catch (IOException e) {
             System.out.println("Could not save file: " + e.getMessage());

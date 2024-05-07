@@ -12,6 +12,8 @@ public class ChatMessage implements Serializable {
     private ImageIcon userImage;
     private Object data;
 
+    private String fileDirectory;
+
     private String fileName;
 
 
@@ -45,11 +47,12 @@ public class ChatMessage implements Serializable {
         this.userImage = userImage;
     }
 
-    public ChatMessage(String senderName, ChatMessageType type, byte[] file, String fileName) {
+    public ChatMessage(String senderName, ChatMessageType type, byte[] file, String fileName, String fileDirectory) {
         this.senderName = senderName;
         this.type = type;
         this.file = file;
         this.fileName = fileName;
+        this.fileDirectory = fileDirectory;
 
     }
 
@@ -75,6 +78,10 @@ public class ChatMessage implements Serializable {
 
     public String getFileName(){
         return fileName;
+    }
+
+    public String getFileDirectory() {
+        return fileDirectory;
     }
 
     public ImageIcon getUserImage() {
