@@ -76,14 +76,6 @@ public class SocketServerThread implements Runnable {
 
                             saveFile(receivedFileName, fileData);
 
-                            // Update GUI to show file info
-                            SwingUtilities.invokeLater(() -> {
-                                try {
-                                    doc.insertString(doc.getLength(), chatMessage.getSenderName() + " sent a file: " + receivedFileName + " located at: " + receivedFileDirectory + "\n", null);
-                                } catch (BadLocationException e) {
-                                    e.printStackTrace();
-                                }
-                            });
 
                             break;
                         default:

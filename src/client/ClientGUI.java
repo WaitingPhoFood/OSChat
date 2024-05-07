@@ -221,14 +221,25 @@ public class ClientGUI extends JFrame implements ActionListener {
                     output.writeObject(fileMessage);
                     output.flush();
 
-
-                    SwingUtilities.invokeLater(() -> {
+                    try {
+                        String messageText = "Sent a file to C:\\Users\\adam.long named: " + file.getName();
+                        // Send only the message text as a String
+                        output.writeObject(messageText);
+                        output.flush();
+                        messageField.setText("");
+                        // Display the client's message in their own chat area
                         try {
-                            doc.insertString(doc.getLength(), "You sent a file: " + file.getName() + " located at: " + fileDirectory + "\n", null);
+                            doc.insertString(doc.getLength(), username + ": " + messageText + "\n", null);
                         } catch (BadLocationException ble) {
                             ble.printStackTrace();
                         }
-                    });
+                    } catch (IOException ex) {
+                        try {
+                            doc.insertString(doc.getLength(), "Error sending message: " + ex.getMessage() + "\n", null);
+                        } catch (BadLocationException ble) {
+                            ble.printStackTrace();
+                        }
+                    }
 
                 } catch (IOException ex) {
                     try {
@@ -238,6 +249,8 @@ public class ClientGUI extends JFrame implements ActionListener {
                     }
                 }
             }
+
+
         }
     }
 
