@@ -68,6 +68,14 @@ public class ClientGUI extends JFrame implements ActionListener {
             }
         });
 
+
+        
+        
+        getContentPane().setBackground(Color.decode("#ffb8ae"));
+        Color backgroundColor = Color.decode("#ffb8ae");
+        getContentPane().setBackground(backgroundColor);
+        Color secondaryBackgroundColor = Color.decode("#648c54");
+
         // Profile Picture Panel ---------------------
         // Create a panel for the user's profile
         profilePanel = new JPanel();
@@ -80,21 +88,78 @@ public class ClientGUI extends JFrame implements ActionListener {
         add(profilePanel, BorderLayout.WEST);
 
 
+
         //---------------------------------------------
 
-        chatArea = new JTextPane();
-        chatArea.setEditable(false);
+
+
+         //--Change chat background---------------------------------//
+
+         chatArea = new JTextPane();
+         chatArea.setEditable(false);
+         chatArea.setBackground(backgroundColor);
+ 
+ 
+         ImageIcon chatAreaImg = new ImageIcon("C:\\Users\\Sara\\Downloads\\OSChat-AdamsBranch\\OSChat-AdamsBranch\\src\\client\\littleguybackground2.png");
+         Image imgIcon = chatAreaImg.getImage();
+         Image modifiedImgIcon = imgIcon.getScaledInstance(1910, 915, Image.SCALE_SMOOTH);
+         chatAreaImg = new ImageIcon(modifiedImgIcon);
+         chatArea.insertIcon(chatAreaImg);
+          
+         //--------------------------------------------------------//
+ 
+
+       
         doc = chatArea.getStyledDocument();
         add(new JScrollPane(chatArea), BorderLayout.CENTER);
+        //Button images send and connect//
+        
+        sendButton = new JButton();
+        ImageIcon sendButtonImg = new ImageIcon("C:\\Users\\Sara\\Downloads\\OSChat-AdamsBranch\\OSChat-AdamsBranch\\src\\client\\send.png");
+        Image scaledImage = sendButtonImg.getImage().getScaledInstance(80, 70, Image.SCALE_SMOOTH); // Adjust the size as needed
+        sendButtonImg = new ImageIcon(scaledImage);
+        sendButton.setIcon(sendButtonImg);
+        sendButton.setBorderPainted(false);
+        sendButton.setContentAreaFilled(false);
+        sendButton.setFocusPainted(false);
+        sendButton.setOpaque(false);
+
+
+
+        connectButton = new JButton();
+        ImageIcon connectButtonImg = new ImageIcon("C:\\Users\\Sara\\Downloads\\OSChat-AdamsBranch\\OSChat-AdamsBranch\\src\\client\\connect.png");
+        Image connectScaledImage = connectButtonImg.getImage().getScaledInstance(90, 60, Image.SCALE_SMOOTH); // Adjust the size as needed
+        connectButtonImg = new ImageIcon(connectScaledImage);
+        connectButton.setIcon(connectButtonImg);
+        connectButton.setBorderPainted(false);
+        connectButton.setContentAreaFilled(false);
+        connectButton.setFocusPainted(false);
+        connectButton.setOpaque(false);
+
+        //-----------------------------------//
 
         JPanel panel = new JPanel();
         messageField = new JTextField(30);
-        sendButton = new JButton("Send");
-        sendFileButton = new JButton("Send File");
+        //Change button image
+        sendFileButton = new JButton();
+        ImageIcon sendFileButtonImg = new ImageIcon("C:\\Users\\Sara\\Downloads\\OSChat-AdamsBranch\\OSChat-AdamsBranch\\src\\client\\file.png");
+        Image sendFileScaledImage = sendFileButtonImg.getImage().getScaledInstance(140, 50, Image.SCALE_SMOOTH); // Adjust the size as needed
+        sendFileButtonImg = new ImageIcon(sendFileScaledImage);
+        sendFileButton.setIcon(sendFileButtonImg);
+        sendFileButton.setBorderPainted(false);
+        sendFileButton.setContentAreaFilled(false);
+        sendFileButton.setFocusPainted(false);
+        sendFileButton.setOpaque(false);
+
+
+
         fileChooser = new JFileChooser();
-        connectButton = new JButton("Connect");
+        
         serverAddressField = new JTextField("localhost", 10);
         serverPortField = new JTextField("6000", 5);
+
+        panel.setBackground(secondaryBackgroundColor); //change background color
+
 
         panel.add(messageField);
         panel.add(sendButton);
