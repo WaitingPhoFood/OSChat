@@ -24,21 +24,32 @@ public class Start extends JFrame implements ActionListener {
     private JButton joinChatroomButton;
     private JLabel pictureLabel;
     private JLabel titleLabel;
-    private ImageIcon userImage; //PFP
+    private ImageIcon userImage;
+    private JLabel background; //PFP
 
     public Start() {
         super("Start");
+        
         setSize(720, 720);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
+        
 
         // Set the background color to the specified hex color
         getContentPane().setBackground(Color.decode("#ebc1c1"));
         Color backgroundColor = Color.decode("#ebc1c1");
         getContentPane().setBackground(backgroundColor);
+          //-------------------------------//
+        //Testing a background image (Sara's edit)//
+        setContentPane(new JLabel(new ImageIcon("C:\\Users\\Sara\\Downloads\\OSChat-AdamsBranch\\OSChat-AdamsBranch\\src\\Main\\littleguybackground.png")));
+        setLayout(new FlowLayout());
+        background = new JLabel();
+        add(background);
+        setSize(720,720);
+        //-------------------------------------///
 
         titleLabel = new JLabel("Welcome to SocketChat!", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        titleLabel.setFont(new Font("Monospaced", Font.BOLD, 24));
         titleLabel.setOpaque(true); // Needed for JLabels
         titleLabel.setBackground(backgroundColor);
 
@@ -57,12 +68,69 @@ public class Start extends JFrame implements ActionListener {
         bottomPanel.setBackground(backgroundColor); // Set the background color of the bottomPanel
 
         usernameField = new JTextField(20);
-        uploadButton = new JButton("Upload Profile Picture");
-        clearPFPButton = new JButton("Clear Profile Picture"); // Initialize the button
-        nextButton = new JButton("Next");
-        createServerButton = new JButton("Create Server");
-        joinChatroomButton = new JButton("Join Chatroom");
+        uploadButton = new JButton();
+        clearPFPButton = new JButton(); // Initialize the button
+        nextButton = new JButton();
+        createServerButton = new JButton();
+        joinChatroomButton = new JButton();
         pictureLabel = new JLabel();
+
+         // Button Image Experiment//
+         ImageIcon uploadButtonImg = new ImageIcon("C:\\Users\\Sara\\Downloads\\OSChat-AdamsBranch\\OSChat-AdamsBranch\\src\\Main\\Button.png");
+         Image imgIcon = uploadButtonImg.getImage();
+         Image modifiedImgIcon = imgIcon.getScaledInstance(180, 35, Image.SCALE_SMOOTH);
+         uploadButtonImg = new ImageIcon(modifiedImgIcon);
+         uploadButton.setBorder(null);
+         uploadButton.setIcon(uploadButtonImg);
+         uploadButton.setBackground(null);
+         
+         add(uploadButton);
+
+         ImageIcon createServerButtonImg = new ImageIcon("C:\\Users\\Sara\\Downloads\\OSChat-AdamsBranch\\OSChat-AdamsBranch\\src\\Main\\create.png");
+         Image createServerimgIcon = createServerButtonImg.getImage();
+         Image createServermodifiedImgIcon = createServerimgIcon.getScaledInstance(140, 35, Image.SCALE_SMOOTH);
+         createServerButtonImg = new ImageIcon(createServermodifiedImgIcon);
+         createServerButton.setBorder(null);
+         createServerButton.setIcon(createServerButtonImg);
+         createServerButton.setBackground(null);
+         
+         
+
+         ImageIcon joinChatroomButtonImg = new ImageIcon("C:\\Users\\Sara\\Downloads\\OSChat-AdamsBranch\\OSChat-AdamsBranch\\src\\Main\\Button.png");
+         Image joinChatroomimgIcon = joinChatroomButtonImg.getImage();
+         Image joinChatroommodifiedImgIcon = joinChatroomimgIcon.getScaledInstance(140, 35, Image.SCALE_SMOOTH);
+         joinChatroomButtonImg = new ImageIcon(joinChatroommodifiedImgIcon);
+         joinChatroomButton.setBorder(null);
+         joinChatroomButton.setIcon(joinChatroomButtonImg);
+         joinChatroomButton.setBackground(null);
+         
+         
+ 
+         ImageIcon nextButtonImg = new ImageIcon("C:\\Users\\Sara\\Downloads\\OSChat-AdamsBranch\\OSChat-AdamsBranch\\src\\Main\\next.png");
+         Image nextImgIcon = nextButtonImg.getImage();
+         Image nextModifiedImgIcon = nextImgIcon.getScaledInstance(80, 40, Image.SCALE_SMOOTH);
+         nextButtonImg= new ImageIcon(nextModifiedImgIcon);
+         nextButton.setBorder(null);
+         nextButton.setIcon(nextButtonImg);
+         nextButton.setBackground(null);
+         
+         add(nextButton);
+ 
+         ImageIcon clearButtonImg = new ImageIcon("C:\\Users\\Sara\\Downloads\\OSChat-AdamsBranch\\OSChat-AdamsBranch\\src\\Main\\clearbutton.png");
+         Image clearImgIcon = clearButtonImg.getImage();
+         Image clearModifiedImgIcon = clearImgIcon.getScaledInstance(180, 35, Image.SCALE_SMOOTH);
+         clearButtonImg= new ImageIcon(clearModifiedImgIcon);
+         clearPFPButton.setBorder(null);
+         clearPFPButton.setIcon(clearButtonImg);
+         clearPFPButton.setBackground(null);
+         
+         add(clearPFPButton);
+         
+ 
+     //---------------------------------///
+
+
+
 
         uploadButton.addActionListener(this);
         clearPFPButton.addActionListener(this); // Add action listener to the button
@@ -71,7 +139,11 @@ public class Start extends JFrame implements ActionListener {
         createServerButton.addActionListener(e -> new ServerGUI(usernameField.getText(), userImage)); // Add action listener to create server button
         joinChatroomButton.addActionListener(e -> new ClientGUI(usernameField.getText(), userImage)); // Add action listener to join chatroom button
 
-        topPanel.add(new JLabel("Username:"));
+       //Changing font experiment
+       JLabel user = new JLabel("Username:");
+       user.setFont(new Font("Monospaced", Font.PLAIN, 20));
+       topPanel.add(user);
+
         topPanel.add(usernameField);
         topPanel.add(uploadButton);
         topPanel.add(pictureLabel);
@@ -83,7 +155,7 @@ public class Start extends JFrame implements ActionListener {
             String ipAddress = getLocalIPv4Address();
             if (ipAddress != null) {
                 JLabel ipLabel = new JLabel("Your IP Address: " + ipAddress + " Recommended Port is 6000");
-                ipLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+                ipLabel.setFont(new Font("Monospaced", Font.PLAIN, 16));
                 topPanel.add(ipLabel);
 
             }
@@ -92,7 +164,7 @@ public class Start extends JFrame implements ActionListener {
         }
 
         JLabel warning = new JLabel("Warning: You must run your IDE in Admin mode and have a file directory: C:\\Users\\OSFileExchange");
-        warning.setFont(new Font("Arial", Font.BOLD, 20));
+        warning.setFont(new Font("Monospaced", Font.BOLD, 20));
         bottomPanel.add(warning);
 
         centerPanel.add(topPanel);
